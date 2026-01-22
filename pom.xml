@@ -50,7 +50,6 @@
         </dependency>
 
 
-
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -129,7 +128,17 @@
                     </excludes>
                 </configuration>
             </plugin>
+
         </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <includes>
+                   <include> **/*.properties</include>
+                </includes>
+            </resource>
+        </resources>
     </build>
 
 </project>
