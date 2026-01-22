@@ -1,0 +1,12 @@
+package br.com.vininiceto.sistemadegestaodeprojetosedemandas.dto;
+
+import br.com.vininiceto.sistemadegestaodeprojetosedemandas.model.Enums.TaskPriority;
+import br.com.vininiceto.sistemadegestaodeprojetosedemandas.model.Enums.TaskStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
+import java.util.Date;
+
+public record TaskDTO(@Size(min = 5, max = 150) @NotBlank() String title, String description, TaskStatus status, TaskPriority priority, @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy") Date dueDate) {
+}
