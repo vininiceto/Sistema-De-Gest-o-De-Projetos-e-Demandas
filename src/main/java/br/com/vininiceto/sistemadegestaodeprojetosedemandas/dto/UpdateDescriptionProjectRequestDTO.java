@@ -1,4 +1,4 @@
 package br.com.vininiceto.sistemadegestaodeprojetosedemandas.dto;
 
-public record ProjectDescriptionUpdateDTO(String description) {
+public record UpdateDescriptionProjectRequestDTO(String description) {
 }

@@ -45,5 +45,15 @@ public class ExceptionsHandler {
         ExceptionResponse response = new ExceptionResponse(ldt.format(dtm), ex.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(DateInvalidException.class)
+    public final ResponseEntity<ExceptionResponse> handleDataInvalidExceptions(Exception ex, WebRequest request) {
+        LocalDateTime ldt = new Date().toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
+        ExceptionResponse response = new ExceptionResponse(ldt.format(dtm), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
 }
 

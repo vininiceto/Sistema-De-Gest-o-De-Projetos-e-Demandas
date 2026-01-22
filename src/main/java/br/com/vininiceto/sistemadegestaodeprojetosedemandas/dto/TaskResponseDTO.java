@@ -8,5 +8,5 @@ import jakarta.validation.constraints.Size;
 
 import java.util.Date;
 
-public record TaskRequestDTO(@Size(min = 5, max = 150) @NotBlank() String title, String description, TaskStatus status, TaskPriority priority, @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy") Date dueDate) {
+public record TaskResponseDTO(@Size(min = 5, max = 150) @NotBlank(message = "Field title is required")String title, String description, TaskStatus status, TaskPriority priority, @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy") Date dueDate) {
 }
