@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-import java.util.Date;
+import java.time.LocalDate;
 
-public record TaskRequestDTO(@Size(min = 5, max = 150) @NotBlank() String title, String description, TaskStatus status, TaskPriority priority, @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy") Date dueDate) {
+public record TaskRequestDTO(@Size(min = 5, max = 150) @NotBlank() String title, String description, TaskStatus status, TaskPriority priority, @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy") LocalDate dueDate) {
 }

@@ -2,15 +2,16 @@ package br.com.vininiceto.sistemadegestaodeprojetosedemandas.service;
 
 import br.com.vininiceto.sistemadegestaodeprojetosedemandas.Exceptions.handler.DateInvalidException;
 import br.com.vininiceto.sistemadegestaodeprojetosedemandas.Exceptions.handler.ObjectEmptyException;
+import br.com.vininiceto.sistemadegestaodeprojetosedemandas.Exceptions.handler.ObjectNullException;
 import br.com.vininiceto.sistemadegestaodeprojetosedemandas.dto.ProjectRequestDTO;
 import br.com.vininiceto.sistemadegestaodeprojetosedemandas.dto.ProjectResponseDTO;
+import br.com.vininiceto.sistemadegestaodeprojetosedemandas.dto.UpdateEndDateProjectRequestDTO;
 import br.com.vininiceto.sistemadegestaodeprojetosedemandas.model.Project;
 import br.com.vininiceto.sistemadegestaodeprojetosedemandas.repository.ProjectRepository;
 import org.springframework.stereotype.Service;
 import tools.jackson.databind.ObjectMapper;
 
-import java.time.DateTimeException;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -38,6 +39,18 @@ public class ProjectService {
         // });
     }
 
+    public ProjectResponseDTO updateEndDateProject(UpdateEndDateProjectRequestDTO data, Long id) {
+        Project project = repository.findById(id).orElseThrow(() -> new ObjectNullException("Invalid id"));
+
+
+        project.setEndDate(data.endDate());
+        Project saved = repository.save(project);
+
+
+        return mapper.convertValue(saved, ProjectResponseDTO.class);
+
+    }
+
     public List<ProjectResponseDTO> findByName(String name) {
 
         List<Project> projects = repository.findByName(name);
@@ -51,7 +64,19 @@ public class ProjectService {
             throw new ObjectEmptyException("Field name is required");
         }
 
-        if (!project.endDate().after(new Date())) {
+        if (project.endDate() == null) {
+            Project project1 = new Project();
+
+            project1.setName(project.name());
+            project1.setDescription(project.description());
+
+            Project saved = repository.save(project1);
+
+            return mapper.convertValue(saved, ProjectResponseDTO.class);
+        }
+
+
+        if (!project.endDate().isAfter(LocalDate.now())) {
             throw new DateInvalidException("Data final do projeto não pode ser antes da data inicial do projeto");
         }
 
