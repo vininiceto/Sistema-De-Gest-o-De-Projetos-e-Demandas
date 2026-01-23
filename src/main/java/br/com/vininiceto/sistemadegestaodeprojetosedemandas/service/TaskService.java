@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tools.jackson.databind.ObjectMapper;
 
-import java.time.DateTimeException;
 import java.util.List;
 
 @Service
@@ -46,15 +45,15 @@ public class TaskService {
         task1.setDescription(task.description());
         task1.setStatus(task.status());
         task1.setPriority(task.priority());
-        if(project.getStartDate().after(task.dueDate())){
+        if (project.getStartDate().isAfter(task.dueDate())) {
             throw new DateInvalidException("Data informada é anterior ao inicio do projeto");
         }
-        if(project.getEndDate().before(task.dueDate())){
+        if (project.getEndDate().isBefore(task.dueDate())) {
             throw new DateInvalidException("Data informada é após a finalização do projeto");
         }
         task1.setDueDate(task.dueDate());
         task1.setProject(project);
-        Task saved =  repository.save(task1);
+        Task saved = repository.save(task1);
 
         return mapper.convertValue(saved, TaskResponseDTO.class);
     }
@@ -65,7 +64,7 @@ public class TaskService {
 
         task1.setStatus(statusTask.status());
 
-        Task saved =  repository.save(task1);
+        Task saved = repository.save(task1);
 
         return mapper.convertValue(saved, TaskResponseDTO.class);
     }
