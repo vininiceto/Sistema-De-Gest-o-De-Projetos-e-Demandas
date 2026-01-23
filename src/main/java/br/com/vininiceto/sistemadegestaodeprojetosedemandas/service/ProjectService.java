@@ -42,6 +42,9 @@ public class ProjectService {
     public ProjectResponseDTO updateEndDateProject(UpdateEndDateProjectRequestDTO data, Long id) {
         Project project = repository.findById(id).orElseThrow(() -> new ObjectNullException("Invalid id"));
 
+        if(project.getTasks().stream().anyMatch(t -> t.getDueDate().isAfter(data.endDate()))){
+            throw new DateInvalidException("Data de finalização de projeto é anterior a data de entrega de tarefas");
+        }
 
         project.setEndDate(data.endDate());
         Project saved = repository.save(project);

@@ -4,6 +4,7 @@ import br.com.vininiceto.sistemadegestaodeprojetosedemandas.model.Enums.TaskPrio
 import br.com.vininiceto.sistemadegestaodeprojetosedemandas.model.Enums.TaskStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,6 +33,7 @@ public class Task {
     private TaskStatus status;
     private TaskPriority priority;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private LocalDate dueDate;
     @ManyToOne
     @JoinColumn(name = "projectId")

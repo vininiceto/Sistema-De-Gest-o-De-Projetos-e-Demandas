@@ -4,6 +4,7 @@ import br.com.vininiceto.sistemadegestaodeprojetosedemandas.Exceptions.handler.D
 import br.com.vininiceto.sistemadegestaodeprojetosedemandas.Exceptions.handler.ObjectNullException;
 import br.com.vininiceto.sistemadegestaodeprojetosedemandas.dto.TaskRequestDTO;
 import br.com.vininiceto.sistemadegestaodeprojetosedemandas.dto.TaskResponseDTO;
+import br.com.vininiceto.sistemadegestaodeprojetosedemandas.dto.UpdateDueDateTaskRequestDTO;
 import br.com.vininiceto.sistemadegestaodeprojetosedemandas.dto.UpdateTaskStatusRequestDTO;
 import br.com.vininiceto.sistemadegestaodeprojetosedemandas.model.Enums.TaskPriority;
 import br.com.vininiceto.sistemadegestaodeprojetosedemandas.model.Enums.TaskStatus;
@@ -45,17 +46,52 @@ public class TaskService {
         task1.setDescription(task.description());
         task1.setStatus(task.status());
         task1.setPriority(task.priority());
+        if (task.dueDate() == null) {
+            task1.setTitle(task.title());
+            task1.setDescription(task.description());
+            task1.setStatus(task.status());
+            task1.setPriority(task.priority());
+            task1.setProject(project);
+            Task saved = repository.save(task1);
+
+            return mapper.convertValue(saved, TaskResponseDTO.class);
+
+        }
         if (project.getStartDate().isAfter(task.dueDate())) {
             throw new DateInvalidException("Data informada é anterior ao inicio do projeto");
         }
         if (project.getEndDate().isBefore(task.dueDate())) {
             throw new DateInvalidException("Data informada é após a finalização do projeto");
         }
+
         task1.setDueDate(task.dueDate());
         task1.setProject(project);
         Task saved = repository.save(task1);
 
         return mapper.convertValue(saved, TaskResponseDTO.class);
+    }
+
+    public TaskResponseDTO updateDueDate(UpdateDueDateTaskRequestDTO data, Long id) {
+        Task task = repository.findById(id).orElseThrow(() -> new ObjectNullException("Invalid id"));
+
+        if(task.getProject().getEndDate() == null){
+            task.setDueDate(data.dueDate());
+
+            Task saved = repository.save(task);
+
+            return mapper.convertValue(saved, TaskResponseDTO.class);
+        }
+
+        if (task.getProject().getEndDate().isBefore(data.dueDate())) {
+            throw new DateInvalidException("Data informada é superior a data final do projeto");
+        }
+
+        task.setDueDate(data.dueDate());
+
+        Task saved = repository.save(task);
+
+        return mapper.convertValue(saved, TaskResponseDTO.class);
+
     }
 
     public TaskResponseDTO updateStatus(UpdateTaskStatusRequestDTO statusTask, Long id) {
